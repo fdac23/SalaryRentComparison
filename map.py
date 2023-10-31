@@ -9,13 +9,10 @@ import json
 
 app = Dash(__name__)
 
-
 # with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
 #     counties = json.load(response)
-
 # df = pd.read_csv("https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv",
 #                    dtype={"fips": str})
-
 # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
 
 df = pd.read_csv('./data/simplemaps_uscities_basicv1/uscities.csv')
@@ -46,21 +43,6 @@ app.layout = html.Div([
     Output("text", "children"), 
     Input("graph", "clickData"))
 def display_selection(clickData):
-    # df['text'] = df['airport'] + '' + df['city'] + ', ' + df['state'] + '' + 'Arrivals: ' + df['cnt'].astype(str)
-    # df['text'] = df['city'] + ', ' + df['state_id']
-
-    # fig = go.Figure(data=go.Scattergeo(
-    #     lon = df['lng'],
-    #     lat = df['lat'],
-    #     text = df['text'],
-    #     mode = 'markers',
-    #     # marker_color = df['cnt'],
-    #     ))
-
-    # fig.update_layout(
-    #     title = 'US Cities',
-    #     geo_scope='usa',
-    # )
     if(clickData == None):
         return "Make a selection"
     else:
