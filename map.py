@@ -30,10 +30,14 @@ fig = go.Figure(data=go.Scattergeo(
 fig.update_layout(
     title = 'US Cities',
     geo_scope='usa',
+    width=1200,
+    height=600,
+    margin=dict(l=5, r=5, t=30, b=5),
+    paper_bgcolor="LightSteelBlue",
 )
 
 app.layout = html.Div([
-    html.H4('Dot map of cities'),
+    html.H1('Salary vs. Rent Comparison Tool'),
     dcc.Graph(id="graph", figure=fig),
     html.P(id="text")
 ])
@@ -46,7 +50,6 @@ def display_selection(clickData):
     if(clickData == None):
         return "Make a selection"
     else:
-        print(clickData)
         return clickData["points"][0]["text"]
 
 # {
