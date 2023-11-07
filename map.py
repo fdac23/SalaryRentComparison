@@ -15,9 +15,12 @@ app = Dash(__name__)
 #                    dtype={"fips": str})
 # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
 
-df = pd.read_csv('./data/simplemaps_uscities_basicv1/uscities.csv')
+# df = pd.read_csv('./data/simplemaps_uscities_basicv1/uscities.csv')
+df = pd.read_csv('./data/clean_data.csv')
 
-df['text'] = df['city'] + ', ' + df['state_id']
+print(df)
+
+df['text'] = df['city'] + ', ' + df['state_id'] + ': $' + df['Annual median wage(2)']
 
 fig = go.Figure(data=go.Scattergeo(
     lon = df['lng'],
