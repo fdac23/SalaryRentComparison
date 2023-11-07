@@ -54,9 +54,9 @@ merged_df = pd.merge(df, df2, on=['city', 'state_id'], how='outer')
 
 loc_df = pd.read_csv("data/simplemaps_uscities_basicv1/uscities.csv")
 
-final_df = pd.merge(merged_df, loc_df, on=['city', 'state_id'])
+final_df = pd.merge(merged_df, loc_df, on=['city', 'state_id']).dropna(subset=['Area Name', 'Annual median wage(2)'])
 
 # Display the resulting DataFrame
 # print(merged_df[['city', 'state_id','Annual median wage(2)','2022-05-31']].dropna())
-print(final_df[['city', 'state_id','lat', 'lng', 'Annual median wage(2)', '2022-05-31']].dropna())
+print(final_df[['city', 'state_id','lat', 'lng', 'Annual median wage(2)', '2022-05-31']])
 final_df.to_csv("data/clean_data.csv")
