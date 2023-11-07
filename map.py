@@ -22,7 +22,7 @@ df = pd.read_csv('./data/clean_data.csv')
 city_selection = [None, None]
 
 # Create "text" column as string of information
-df['text'] = df['city'] + ', ' + df['state_id'] + ': $' + df['Annual median wage(2)']
+df['text'] = df['city'] + ', ' + df['state_id'] + ': $' + df['Annual median wage(2)'].astype(str)
 
 fig = go.Figure(data=go.Scattergeo(
     lon = df['lng'],
@@ -63,7 +63,7 @@ def select(clickData):
     # print(city_selection[0])
     # print(city_selection[1])
     # print("\n")
-    
+
     if(clickData == None):
         return "Make a selection"
     else:
