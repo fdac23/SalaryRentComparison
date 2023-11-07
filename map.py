@@ -2,6 +2,7 @@ from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
+import re
 
 
 from urllib.request import urlopen
@@ -18,8 +19,9 @@ app = Dash(__name__)
 # df = pd.read_csv('./data/simplemaps_uscities_basicv1/uscities.csv')
 df = pd.read_csv('./data/clean_data.csv')
 
-print(df)
+city_selection = [None, None]
 
+# Create "text" column as string of information
 df['text'] = df['city'] + ', ' + df['state_id'] + ': $' + df['Annual median wage(2)'].astype(str)
 
 fig = go.Figure(data=go.Scattergeo(
@@ -42,18 +44,56 @@ fig.update_layout(
 app.layout = html.Div([
     html.H1('Salary vs. Rent Comparison Tool'),
     dcc.Graph(id="graph", figure=fig),
-    html.P(id="text")
+    html.P(id="text"),
+    html.Div(id="compare")
 ])
 
 
 @app.callback(
     Output("text", "children"), 
     Input("graph", "clickData"))
-def display_selection(clickData):
+def select(clickData):
+
+    # Update city selections
+    if len(city_selection) < 2:
+        city_selection.append(clickData)
+    else:
+        city_selection.pop(0)
+        city_selection.append(clickData)
+    # print(city_selection[0])
+    # print(city_selection[1])
+    # print("\n")
+
     if(clickData == None):
         return "Make a selection"
     else:
         return clickData["points"][0]["text"]
+
+
+@app.callback(
+    Output("compare","children"),
+    Input("graph", "clickData"))
+def compare(x):
+    if city_selection[0] == None or city_selection[1] == None:
+        return "Select another city to compare"
+
+    # Parse city and state names out of selection
+    city1 = re.split(r'(,+|:+)', city_selection[0]["points"][0]["text"])
+    city2 = re.split(r'(,+|:+)', city_selection[1]["points"][0]["text"])
+
+    #TODO: search by city AND state. There are duplicate city names
+    city1 = df.loc[df['city'] == city1[0]]
+    city2 = df.loc[df['city'] == city2[0]]
+
+
+    string1 = city1["city"] + " has a salary of " + city1["Annual median wage(2)"]
+    string2 = city2["city"] + " has a salary of " + city2["Annual median wage(2)"]
+
+    #TODO: the comparison section could obviously use some changes
+    return [
+        html.P(string1),
+        html.P(string2)
+    ]
 
 # {
 #   "points": [
