@@ -50,7 +50,13 @@ def read_data2(filename,area):
 
 df2 = read_data2("data/Metro_zori_sm_month.csv","RegionName")
 
-merged_df = pd.merge(df, df2, on=['City', 'State'], how='outer')
+merged_df = pd.merge(df, df2, on=['city', 'state_id'], how='outer')
+
+loc_df = pd.read_csv("data/simplemaps_uscities_basicv1/uscities.csv")
+
+final_df = pd.merge(merged_df, loc_df, on=['city', 'state_id'])
 
 # Display the resulting DataFrame
-print(merged_df[['City', 'State','Annual median wage(2)','2022-05-31']].dropna())
+# print(merged_df[['city', 'state_id','Annual median wage(2)','2022-05-31']].dropna())
+print(final_df[['city', 'state_id','lat', 'lng', 'Annual median wage(2)', '2022-05-31']].dropna())
+final_df.to_csv("data/clean_data.csv")
