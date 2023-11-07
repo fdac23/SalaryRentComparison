@@ -20,7 +20,7 @@ df = pd.read_csv('./data/clean_data.csv')
 
 print(df)
 
-df['text'] = df['city'] + ', ' + df['state_id'] + ': $' + df['Annual median wage(2)']
+df['text'] = df['city'] + ', ' + df['state_id'] + ': $' + df['Annual median wage(2)'].astype(str)
 
 fig = go.Figure(data=go.Scattergeo(
     lon = df['lng'],

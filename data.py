@@ -1,6 +1,7 @@
 # TODO: Clean up all data (for salaries, drop the zip code at end of city name, etc)
 # Add to consistency of data for both sets / general data processing
 import pandas as pd
+import numpy as np
 
 
 def read_data(filename,area):
@@ -25,8 +26,6 @@ def read_data(filename,area):
     return df
 
 
-df = read_data("data/OES_Report.csv",'Area Name')
-
 def read_data2(filename,area):
     df = pd.read_csv(filename)
     #print(df)
@@ -48,9 +47,14 @@ def read_data2(filename,area):
     return df
 
 
+df = read_data("data/OES_Report.csv",'Area Name')
 df2 = read_data2("data/Metro_zori_sm_month.csv","RegionName")
 
 merged_df = pd.merge(df, df2, on=['city', 'state_id'], how='outer')
+
+# Go through the columns in the merged_df and change all "-" to NaN to be dropped later.
+for column in merged_df.columns:
+    merged_df[column] = merged_df[column].apply(lambda x: np.nan if str(x).strip() == '-' else x)
 
 loc_df = pd.read_csv("data/simplemaps_uscities_basicv1/uscities.csv")
 
