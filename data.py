@@ -6,16 +6,16 @@ import pandas as pd
 def read_data(filename,area):
     df = pd.read_csv(filename)
     #print(df)
-    df['City'] = df[area].str.extract(r'^(.*?)(?:-[^,]*)?,', expand=False)
-    df['State'] = df[area].str.extract(r'([A-Z]{2})(?:[^,]*)?\(', expand=False)
+    df['city'] = df[area].str.extract(r'^(.*?)(?:-[^,]*)?,', expand=False)
+    df['state_id'] = df[area].str.extract(r'([A-Z]{2})(?:[^,]*)?\(', expand=False)
     
     # Remove any leading or trailing whitespace
-    df['City'] = df['City'].str.strip()
-    df['State'] = df['State'].str.strip()
+    df['city'] = df['city'].str.strip()
+    df['state_id'] = df['state_id'].str.strip()
     
-    # Modify city and state names further
-    df['City'] = df['City'].str.split('-').str[0]  # Keep only the part before the first dash
-    df['State'] = df['State'].str.split('-').str[0]  # Keep only the part before the first dash
+    # Modify city and state_id names further
+    df['city'] = df['city'].str.split('-').str[0]  # Keep only the part before the first dash
+    df['state_id'] = df['state_id'].str.split('-').str[0]  # Keep only the part before the first dash
     
     # Display the resulting DataFrame
     #print(df[['City', 'State']])
@@ -30,16 +30,16 @@ df = read_data("data/OES_Report.csv",'Area Name')
 def read_data2(filename,area):
     df = pd.read_csv(filename)
     #print(df)
-    df['City'] = df[area].str.extract(r'^(.*?)(?:-[^,]*)?,', expand=False)
-    df['State'] = df['StateName']#.str.extract(r'([A-Z]{2})(?:[^,]*)?\(', expand=False)
+    df['city'] = df[area].str.extract(r'^(.*?)(?:-[^,]*)?,', expand=False)
+    df['state_id'] = df['StateName']#.str.extract(r'([A-Z]{2})(?:[^,]*)?\(', expand=False)
     
     # Remove any leading or trailing whitespace
-    df['City'] = df['City'].str.strip()
-    df['State'] = df['State'].str.strip()
+    df['city'] = df['city'].str.strip()
+    df['state_id'] = df['state_id'].str.strip()
     
-    # Modify city and state names further
-    df['City'] = df['City'].str.split('-').str[0]  # Keep only the part before the first dash
-    df['State'] = df['State'].str.split('-').str[0]  # Keep only the part before the first dash
+    # Modify city and state_id names further
+    df['city'] = df['city'].str.split('-').str[0]  # Keep only the part before the first dash
+    df['state_id'] = df['state_id'].str.split('-').str[0]  # Keep only the part before the first dash
     
     # Display the resulting DataFrame
     #print(df[['City', 'State']].dropna())
