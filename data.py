@@ -59,7 +59,7 @@ def clean_data():
 
     loc_df = pd.read_csv("data/simplemaps_uscities_basicv1/uscities.csv")
 
-    final_df = pd.merge(merged_df, loc_df, on=['city', 'state_id']).dropna(subset=['Area Name', 'Annual median wage(2)'])
+    final_df = pd.merge(merged_df, loc_df, on=['city', 'state_id']).dropna(subset=['Area Name', 'Annual median wage(2)','2022-05-31'])
 
     # Display the resulting DataFrame
     # print(merged_df[['city', 'state_id','Annual median wage(2)','2022-05-31']].dropna())

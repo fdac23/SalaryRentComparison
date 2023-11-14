@@ -24,7 +24,7 @@ def create_map():
     city_selection = [None, None]
 
     # Create "text" column as string of information
-    df['text'] = df['city'] + ', ' + df['state_id'] + ': $' + df['Annual median wage(2)'].astype(str)
+    df['text'] = df['city'] + ', ' + df['state_id'] + ': Ratio: ' + (df['2022-05-31']*12/df['Annual median wage(2)']).astype(str)
 
     fig = go.Figure(data=go.Scattergeo(
         lon = df['lng'],
