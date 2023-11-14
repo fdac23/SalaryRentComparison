@@ -88,8 +88,8 @@ def create_map():
         city2 = df.loc[df['city'] == city2[0]]
 
 
-        string1 = city1["city"] + " has a salary of " + city1["Annual median wage(2)"]
-        string2 = city2["city"] + " has a salary of " + city2["Annual median wage(2)"]
+        string1 = city1["city"] + " has a salary of " + city1["Annual median wage(2)"].astype(str)
+        string2 = city2["city"] + " has a salary of " + city2["Annual median wage(2)"].astype(str)
 
         #TODO: the comparison section could obviously use some changes
         return [
