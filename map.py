@@ -31,7 +31,8 @@ def create_map():
         lat = df['lat'],
         text = df['text'],
         mode = 'markers',
-        # marker_color = df['cnt'],
+        marker_size = df['2022-05-31']*12/df['Annual median wage(2)']*100,
+        marker_color = df['2022-05-31']*12/df['Annual median wage(2)']*100,
         ))
 
     fig.update_layout(
@@ -46,13 +47,15 @@ def create_map():
     app.layout = html.Div([
         html.H1('Salary vs. Rent Comparison Tool'),
         dcc.Graph(id="graph", figure=fig),
-        html.P(id="text"),
-        html.Div(id="compare")
+        html.Div(style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'space-evenly'}, children = [
+            html.P(id="select"),
+            html.Div(id="compare")
+        ])
     ])
 
 
     @app.callback(
-        Output("text", "children"), 
+        Output("select", "children"), 
         Input("graph", "clickData"))
     def select(clickData):
 
