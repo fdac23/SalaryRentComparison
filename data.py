@@ -1,7 +1,10 @@
-# TODO: Clean up all data (for salaries, drop the zip code at end of city name, etc)
-# Add to consistency of data for both sets / general data processing
 import pandas as pd
 import numpy as np
+import plotly.express as px
+import plotly.graph_objects as go
+import re
+
+from dash import dcc
 
 
 def read_data(filename,area):
@@ -65,3 +68,175 @@ def clean_data():
     # print(merged_df[['city', 'state_id','Annual median wage(2)','2022-05-31']].dropna())
     # print(final_df[['city', 'state_id','lat', 'lng', 'Annual median wage(2)', '2022-05-31']])
     final_df.to_csv("data/clean_data.csv")
+
+
+"""
+Compares the median wages between two selected cities.
+
+Args:
+    name1 (str): Name of the first city
+    wage1 (str): Median wage of the first city
+    name2 (str): Name of the second city
+    wage2 (str): Median wage of the second city
+
+Returns:
+    dcc.Graph: A bar graph comparing the median wages of the two cities for easy comparison
+"""
+def compare_cities_median_wage(name1, wage1, name2, wage2):
+    areas = [name2, name1]
+    wage1 = int(wage1)
+    wage2 = int(wage2)
+    wages = [wage2, wage1]
+    
+    trace = go.Bar(
+        x=areas,
+        y=wages,
+        marker=dict(color='red')  # Change color as needed
+    )
+
+    layout = go.Layout(
+        title='Annual Median Wage Comparison',
+        xaxis=dict(title='City'),
+        yaxis=dict(title='Annual Median Wage')
+    )
+
+    fig = go.Figure(data=[trace], layout=layout)
+
+    return dcc.Graph(figure=fig)
+
+
+"""
+Compares the ratio of rent to monthly wage between two selected cities.
+
+Args:
+    name1 (str): Name of the first city
+    wage1 (str): Median wage of the first city
+    rent1 (str): Monthly rent of the first city
+    name2 (str): Name of the second city
+    wage2 (str): Median wage of the second city
+    rent2 (str): Monthly rent of the second city
+
+Returns:
+    dcc.Graph: A bar graph comparing the ratio of monthly rent to median wage of the two cities for easy comparison
+"""
+def compare_cities_ratio(name1, wage1, rent1, name2, wage2, rent2):
+    areas = [name2, name1]
+    ratio1 = float(float(rent1)*12/float(wage1))
+    ratio2 = float(float(rent2)*12/float(wage2))
+    rentPerc = [ratio2, ratio1]
+    
+    trace = go.Bar(
+        x=areas,
+        y=rentPerc,
+        marker=dict(color='blue')  # Change color as needed
+    )
+
+    layout = go.Layout(
+        title='Rent to Wage Ratio Comparison',
+        xaxis=dict(title='City'),
+        yaxis=dict(title='Rent / Income')
+    )
+
+    fig = go.Figure(data=[trace], layout=layout)
+
+    return dcc.Graph(figure=fig)
+
+  
+"""
+Compare the monthly rent between two selected cities.
+
+Args:
+    name1 (str): Name of the first city
+    rent1 (str): Monthly rent of the first city
+    name2 (str): Name of the second city
+    rent2 (str): Monthly rent of the second city
+
+Returns:
+    dcc.Graph: A bar graph comparing the monthly rent of the two cities for easy comparison
+"""
+def compare_cities_rent(name1, rent1, name2, rent2):
+    areas = [name2, name1]
+    rent1 = float(rent1)
+    rent2 = float(rent2)
+    rents = [rent2, rent1]
+    
+    trace = go.Bar(
+        x=areas,
+        y=rents,
+        marker=dict(color='green')  # Change color as needed
+    )
+
+    layout = go.Layout(
+        title='Monthly Rent Comparison',
+        xaxis=dict(title='City'),
+        yaxis=dict(title='Monthly Rent')
+    )
+
+    fig = go.Figure(data=[trace], layout=layout)
+
+    return dcc.Graph(figure=fig)
+
+
+"""
+Compare the wage percentiles between two selected cities. Includes the 10th, 25th, 50th, 75th, and 90th percentiles.
+
+Args:
+    name1 (str): Name of the first city
+    median1 (str): Median wage of the first city
+    _10th_percentile1 (str): 10th percentile wage of the first city
+    _25th_percentile1 (str): 25th percentile wage of the first city
+    _75th_percentile1 (str): 75th percentile wage of the first city
+    _90th_percentile1 (str): 90th percentile wage of the first city
+    name2 (str): Name of the second city
+    median2 (str): Median wage of the second city
+    _10th_percentile2 (str): 10th percentile wage of the second city
+    _25th_percentile2 (str): 25th percentile wage of the second city
+    _75th_percentile2 (str): 75th percentile wage of the second city
+    _90th_percentile2 (str): 90th percentile wage of the second city
+
+Returns:
+    dcc.Graph: Graph containing two boxplots comparing the wage percentiles of the two cities
+"""
+def compare_cities_percentiles(name1, median1, _10th_percentile1, _25th_percentile1, _75th_percentile1, _90th_percentile1, 
+                     name2, median2, _10th_percentile2, _25th_percentile2, _75th_percentile2, _90th_percentile2):
+    data = {
+        'City': [name2, name2, name2, name2, name2, name1, name1, name1, name1, name1],
+        'Percentile': ['10th', '25th', '50th', '75th', '90th', '10th', '25th', '50th', '75th', '90th'],
+        'Wage': [_10th_percentile2, _25th_percentile2, median2, _75th_percentile2, _90th_percentile2, _10th_percentile1, _25th_percentile1, median1, _75th_percentile1, _90th_percentile1]  
+    }
+    
+    df = pd.DataFrame(data)
+
+    fig = px.box(df, x='City', y='Wage', color='City',
+                title='Annual Wages Percentiles Comparison',
+                points='all', hover_data=['Percentile', 'Wage'],
+                boxmode='overlay', color_discrete_sequence=['red', 'blue'])
+
+    return dcc.Graph(figure=fig)
+
+
+"""
+Extracts different characteristics from the text data. For example, extracts the city and state, median wage, monthly rent, etc.
+
+Args:
+    text (str): Text data to extract from (comes from the point on the map)
+
+Returns:
+    All extracted data (name, wage, rent, percentiles)
+"""
+def extract_text_data(text):    
+    # Get everything separated by commas except for the first one (city, state)
+    pattern = r'([^,]+,\s*[A-Z]{2}),\s*(.*),(.*),(.*),(.*),(.*),(.*)'
+    matches = re.match(pattern, text)
+
+    if matches:
+        name = matches.group(1)  # Extract city and state together
+        wage = matches.group(2)  # Extract the first numerical value
+        rent = matches.group(3)  # Extract the second numerical value
+        _10th_percentile = matches.group(4)
+        _25th_percentile = matches.group(5)
+        _75th_percentile = matches.group(6)
+        _90th_percentile = matches.group(7)
+        return name, wage, rent, _10th_percentile, _25th_percentile, _75th_percentile, _90th_percentile
+    
+    return "No matches found..."
