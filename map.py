@@ -23,7 +23,7 @@ def create_map():
 
     # Create "text" column as string of information
     df['text'] = df['city'] + ', ' + df['state_id'] + ',' + (df['Annual median wage(2)']).astype(str) + ',' + round(df['2022-05-31'], 2).astype(str) + ',' + (df['Annual 10th percentile wage(2)']).astype(str) + ',' + (df['Annual 25th percentile wage(2)']).astype(str) + ',' + (df['Annual 75th percentile wage(2)']).astype(str) + ',' + (df['Annual 90th percentile wage(2)']).astype(str)
-    df['hover_text'] = df['city'] + ', ' + df['state_id'] + ': Ratio: ' + round((df['2022-05-31']*12/df['Annual median wage(2)'])*100, 3).astype(str)
+    df['hover_text'] = df['city'] + ', ' + df['state_id'] + '<br>' + 'Rent/Salary Ratio: ' + round((df['2022-05-31']*12/df['Annual median wage(2)'])*100, 3).astype(str) + '%'
 
     fig = go.Figure(data=go.Scattergeo(
         lon = df['lng'],
@@ -76,7 +76,7 @@ def create_map():
                 html.P(html.B(name)),
                 html.P("Median Wage: $" + wage),
                 html.P("Monthly Rent: $" + rent),
-                html.P("Approximate Rent to Wage Ratio: " + str(round((float(rent)*12/float(wage))*100, 3)) + "%")
+                html.P("Percent of Income Spent on Rent: " + str(round((float(rent)*12/float(wage))*100, 3)) + "%")
             ]   
 
 
@@ -92,7 +92,7 @@ def create_map():
             html.P(html.B(name)),
             html.P("Median Wage: $" + wage),
             html.P("Monthly Rent: $" + rent),
-            html.P("Approximate Rent to Wage Ratio: " + str(round((float(rent)*12/float(wage))*100, 3)) + "%")
+            html.P("Percent of Income Spent on Rent: " + str(round((float(rent)*12/float(wage))*100, 3)) + "%")
         ]  
     
 
