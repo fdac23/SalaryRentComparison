@@ -108,6 +108,7 @@ def create_map():
         if city_selection[0] == None or city_selection[1] == None:
             return "Select another city to compare"
         
+
         name, wage, rent, _, _, _, _ = extract_text_data(city_selection[0]["points"][0]["text"])
         return [
             html.P(html.B(name)),
@@ -127,6 +128,8 @@ def create_map():
         name1, wage1, rent1, _10th_percentile1, _25th_percentile1, _75th_percentile1, _90th_percentile1 = extract_text_data(city_selection[0]["points"][0]["text"])
         name2, wage2, rent2, _10th_percentile2, _25th_percentile2, _75th_percentile2, _90th_percentile2 = extract_text_data(city_selection[1]["points"][0]["text"])
         
+        leftover1 = round(float(wage1) * (1 - (float(rent1) * 12)/float(wage1)))
+        leftover2 = round(float(wage2) * (1 - (float(rent2) * 12)/float(wage2)))
         
         wage_plot = compare_cities_median_wage(name1, wage1, name2, wage2)
         rent_plot = compare_cities_rent(name1, rent1, name2, rent2)
@@ -136,6 +139,10 @@ def create_map():
         rent_price_trend_plot = rent_trend_plot(city_selection[0]["points"][0]["customdata"], city_selection[1]["points"][0]["customdata"], wanted_rent_columns)
         
         return[
+            html.Div(style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'space-evenly'}, children = [
+                html.P('Disposable income after rent: $' + str(leftover2)),
+                html.P('Disposable income after rent: $' + str(leftover1)),
+            ]),
             html.Div(style={'display': 'flex', 'flex-direction': 'row', 'justify-content': 'center'}, children = [
                 wage_plot,
                 rent_plot,
