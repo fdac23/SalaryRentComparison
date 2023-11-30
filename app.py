@@ -1,34 +1,13 @@
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
+from data import clean_data
+from map import create_map
 
-app = Dash(__name__)
+def run_app():
+    clean_data()
+    _map = create_map()
+    _map.run_server(debug=True)
+    
 
-### RANDOM STUFF TO GET STARTED
-app.layout = html.Div([
-    dcc.RadioItems(
-        id='candidate', 
-        options=["Joly", "Coderre", "Bergeron"],
-        value="Coderre",
-        inline=True
-    ),
-    dcc.Graph(id="graph"),
-])
-
-
-@app.callback(
-    Output("graph", "figure"), 
-    Input("candidate", "value"))
-def display_choropleth(candidate):
-    df = px.data.election() # replace with your own data source
-    geojson = px.data.election_geojson()
-    fig = px.choropleth(
-        df, geojson=geojson, color=candidate,
-        locations="district", featureidkey="properties.district",
-        projection="mercator", range_color=[0, 6500])
-    fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-    return fig
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    run_app()
