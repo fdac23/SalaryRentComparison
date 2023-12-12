@@ -17,3 +17,7 @@ https://apps.bea.gov/API/signup/
 * Display side bar with relevant information about users selection
 * Fetch data with API calls
 * Clean and process data to make it suitable for use with plotly
+
+## Usage
+To run: `python3 src/app.py`
+Visit: `http://127.0.0.1:8050/`
