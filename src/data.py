@@ -20,11 +20,6 @@ def read_data(filename,area):
     # Modify city and state_id names further
     df['city'] = df['city'].str.split('-').str[0]  # Keep only the part before the first dash
     df['state_id'] = df['state_id'].str.split('-').str[0]  # Keep only the part before the first dash
-    
-    # Display the resulting DataFrame
-    #print(df[['City', 'State']])
-
-    #print(df[['City', 'State']])
 
     return df
 
@@ -42,17 +37,13 @@ def read_data2(filename,area):
     # Modify city and state_id names further
     df['city'] = df['city'].str.split('-').str[0]  # Keep only the part before the first dash
     df['state_id'] = df['state_id'].str.split('-').str[0]  # Keep only the part before the first dash
-    
-    # Display the resulting DataFrame
-    #print(df[['City', 'State']].dropna())
-    #print(df[['City', 'State']])
 
     return df
 
 
 def clean_data():
-    df = read_data("data/OES_Report.csv",'Area Name')
-    df2 = read_data2("data/Metro_zori_sm_month.csv","RegionName")
+    df = read_data("./data/OES_Report.csv",'Area Name')
+    df2 = read_data2("./data/Metro_zori_sm_month.csv","RegionName")
 
     merged_df = pd.merge(df, df2, on=['city', 'state_id'], how='outer')
 
@@ -60,14 +51,11 @@ def clean_data():
     for column in merged_df.columns:
         merged_df[column] = merged_df[column].apply(lambda x: np.nan if str(x).strip() == '-' else x)
 
-    loc_df = pd.read_csv("data/simplemaps_uscities_basicv1/uscities.csv")
+    loc_df = pd.read_csv("./data/simplemaps_uscities_basicv1/uscities.csv")
 
     final_df = pd.merge(merged_df, loc_df, on=['city', 'state_id']).dropna(subset=['Area Name', 'Annual median wage(2)','2022-05-31'])
 
-    # Display the resulting DataFrame
-    # print(merged_df[['city', 'state_id','Annual median wage(2)','2022-05-31']].dropna())
-    # print(final_df[['city', 'state_id','lat', 'lng', 'Annual median wage(2)', '2022-05-31']])
-    final_df.to_csv("data/clean_data.csv")
+    final_df.to_csv("./data/clean_data.csv")
 
 
 """
