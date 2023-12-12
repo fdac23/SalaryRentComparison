@@ -17,6 +17,7 @@ def create_map():
     # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
 
     # df = pd.read_csv('./data/simplemaps_uscities_basicv1/uscities.csv')
+    
     df = pd.read_csv('./data/clean_data.csv')
   
     wanted_rent_columns = [
